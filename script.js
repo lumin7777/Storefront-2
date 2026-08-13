@@ -1,245 +1,226 @@
 /* =================================
-   LUXURY COFFEE SHOP
+   VELA COFFEE
    Main JavaScript
 ================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
 
-    /* ================================
-       MOBILE MENU
-    ================================ */
+/* =================================
+   MENU DATA
+================================= */
 
-    const menuButton = document.querySelector(".menu-button");
-    const nav = document.querySelector(".main-nav");
+const menuData = {
 
-    if (menuButton && nav) {
-        menuButton.addEventListener("click", () => {
-            nav.classList.toggle("open");
-            menuButton.classList.toggle("open");
-        });
-    }
-
-
-    /* ================================
-       CLOSE MOBILE MENU
-       WHEN A LINK IS CLICKED
-    ================================ */
-
-    const navLinks = document.querySelectorAll(".main-nav a");
-
-    navLinks.forEach(link => {
-        link.addEventListener("click", () => {
-            if (nav) {
-                nav.classList.remove("open");
-            }
-
-            if (menuButton) {
-                menuButton.classList.remove("open");
-            }
-        });
-    });
-
-
-    /* ================================
-       SMOOTH SCROLLING
-    ================================ */
-
-    navLinks.forEach(link => {
-        link.addEventListener("click", event => {
-
-            const target = link.getAttribute("href");
-
-            if (target && target.startsWith("#")) {
-                const section = document.querySelector(target);
-
-                if (section) {
-                    event.preventDefault();
-
-                    section.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start"
-                    });
-                }
-            }
-
-        });
-    });
-
-
-    /* ================================
-       HEADER SCROLL EFFECT
-    ================================ */
-
-    const header = document.querySelector("header");
-
-    if (header) {
-        window.addEventListener("scroll", () => {
-
-            if (window.scrollY > 40) {
-                header.classList.add("scrolled");
-            } else {
-                header.classList.remove("scrolled");
-            }
-
-        });
-    }
-
-
-    /* ================================
-       MENU ITEM HOVER EFFECT
-    ================================ */
-
-    const menuItems = document.querySelectorAll(".menu-item");
-
-    menuItems.forEach(item => {
-
-        item.addEventListener("mouseenter", () => {
-            item.classList.add("hovered");
-        });
-
-        item.addEventListener("mouseleave", () => {
-            item.classList.remove("hovered");
-        });
-
-    });
-
-
-    /* ================================
-       FADE-IN ON SCROLL
-    ================================ */
-
-    const revealElements = document.querySelectorAll(
-        ".section, .menu-item, .about-content, .about-image"
-    );
-
-    const revealObserver = new IntersectionObserver(
-        entries => {
-
-            entries.forEach(entry => {
-
-                if (entry.isIntersecting) {
-                    entry.target.classList.add("visible");
-                    revealObserver.unobserve(entry.target);
-                }
-
-            });
-
+    coffee: [
+        {
+            name: "Espresso",
+            description: "Rich, concentrated, and beautifully balanced.",
+            price: 3.50
         },
         {
-            threshold: 0.12
+            name: "Americano",
+            description: "Espresso, hot water, and nothing unnecessary.",
+            price: 4.00
+        },
+        {
+            name: "Cappuccino",
+            description: "Espresso, steamed milk, and silky foam.",
+            price: 5.00
+        },
+        {
+            name: "Flat White",
+            description: "Velvety milk with a double espresso.",
+            price: 5.25
+        },
+        {
+            name: "Vanilla Latte",
+            description: "Espresso, steamed milk, and house vanilla.",
+            price: 5.50
+        },
+        {
+            name: "Mocha",
+            description: "Espresso, dark chocolate, and steamed milk.",
+            price: 5.75
         }
-    );
+    ],
 
-    revealElements.forEach(element => {
-        element.classList.add("reveal");
-        revealObserver.observe(element);
+    tea: [
+        {
+            name: "Earl Grey",
+            description: "Classic black tea with bergamot and citrus.",
+            price: 4.00
+        },
+        {
+            name: "Jasmine Green",
+            description: "Delicate green tea with soft floral notes.",
+            price: 4.25
+        },
+        {
+            name: "Chamomile",
+            description: "A gentle herbal tea with honeyed notes.",
+            price: 4.00
+        },
+        {
+            name: "Masala Chai",
+            description: "Black tea, warm spices, and steamed milk.",
+            price: 4.75
+        },
+        {
+            name: "Matcha Latte",
+            description: "Ceremonial matcha with silky steamed milk.",
+            price: 5.50
+        },
+        {
+            name: "Iced Green Tea",
+            description: "Refreshing green tea served over ice.",
+            price: 4.25
+        }
+    ],
+
+    food: [
+        {
+            name: "Butter Croissant",
+            description: "Flaky, golden, and baked fresh each morning.",
+            price: 4.50
+        },
+        {
+            name: "Almond Croissant",
+            description: "Classic pastry filled with almond cream.",
+            price: 5.25
+        },
+        {
+            name: "Avocado Toast",
+            description: "Sourdough, avocado, sea salt, and olive oil.",
+            price: 9.50
+        },
+        {
+            name: "Morning Toast",
+            description: "Sourdough, cultured butter, and seasonal jam.",
+            price: 7.00
+        },
+        {
+            name: "Yogurt & Granola",
+            description: "Greek yogurt, house granola, and fresh fruit.",
+            price: 8.50
+        },
+        {
+            name: "Chocolate Tart",
+            description: "Dark chocolate ganache with flaky sea salt.",
+            price: 6.50
+        }
+    ]
+
+};
+
+
+/* =================================
+   MENU DISPLAY
+================================= */
+
+const menuItemsContainer = document.getElementById("menu-items");
+const menuButtons = document.querySelectorAll(".menu-category");
+
+
+function displayMenu(category) {
+
+    menuItemsContainer.innerHTML = "";
+
+    menuData[category].forEach((item, index) => {
+
+        const menuItem = document.createElement("div");
+
+        menuItem.classList.add("menu-item");
+
+        menuItem.innerHTML = `
+            <div>
+                <h3>${item.name}</h3>
+                <p>${item.description}</p>
+            </div>
+
+            <div class="menu-item-price">
+                $${item.price.toFixed(2)}
+            </div>
+        `;
+
+        menuItemsContainer.appendChild(menuItem);
+
     });
 
+}
 
-    /* ================================
-       MENU CATEGORY FILTER
-    ================================ */
 
-    const filterButtons = document.querySelectorAll(".menu-filter");
-    const menuCards = document.querySelectorAll(".menu-card");
+/* =================================
+   MENU CATEGORY BUTTONS
+================================= */
 
-    filterButtons.forEach(button => {
+menuButtons.forEach(button => {
 
-        button.addEventListener("click", () => {
+    button.addEventListener("click", () => {
 
-            const category = button.dataset.category;
-
-            filterButtons.forEach(btn => {
-                btn.classList.remove("active");
-            });
-
-            button.classList.add("active");
-
-            menuCards.forEach(card => {
-
-                const cardCategory = card.dataset.category;
-
-                if (
-                    category === "all" ||
-                    cardCategory === category
-                ) {
-                    card.style.display = "";
-                } else {
-                    card.style.display = "none";
-                }
-
-            });
-
+        menuButtons.forEach(btn => {
+            btn.classList.remove("active");
         });
+
+        button.classList.add("active");
+
+        const category = button.dataset.category;
+
+        displayMenu(category);
 
     });
 
-
-    /* ================================
-       CURRENT YEAR
-    ================================ */
-
-    const year = document.querySelector(".current-year");
-
-    if (year) {
-        year.textContent = new Date().getFullYear();
-    }
+});
 
 
-    /* ================================
-       NEWSLETTER
-    ================================ */
+/* Show coffee menu when page loads */
 
-    const newsletterForm = document.querySelector(".newsletter-form");
-
-    if (newsletterForm) {
-
-        newsletterForm.addEventListener("submit", event => {
-
-            event.preventDefault();
-
-            const input = newsletterForm.querySelector("input");
-            const button = newsletterForm.querySelector("button");
-
-            if (!input || !button) return;
-
-            if (input.value.trim() === "") {
-                input.focus();
-                return;
-            }
-
-            button.textContent = "Thank you";
-
-            input.value = "";
-
-            setTimeout(() => {
-                button.textContent = "Subscribe";
-            }, 2500);
-
-        });
-
-    }
+displayMenu("coffee");
 
 
-    /* ================================
-       BACK TO TOP
-    ================================ */
+/* =================================
+   ORDER PANEL
+================================= */
 
-    const backToTop = document.querySelector(".back-to-top");
+const orderButton = document.querySelector(".order-button");
+const orderPanel = document.querySelector(".order-panel");
+const orderOverlay = document.querySelector(".order-overlay");
+const closeOrder = document.querySelector(".close-order");
 
-    if (backToTop) {
 
-        backToTop.addEventListener("click", event => {
+function openOrder() {
 
-            event.preventDefault();
+    orderPanel.classList.add("open");
+    orderOverlay.classList.add("open");
 
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
+    document.body.classList.add("order-open");
 
-        });
+}
 
+
+function closeOrderPanel() {
+
+    orderPanel.classList.remove("open");
+    orderOverlay.classList.remove("open");
+
+    document.body.classList.remove("order-open");
+
+}
+
+
+orderButton.addEventListener("click", openOrder);
+
+closeOrder.addEventListener("click", closeOrderPanel);
+
+orderOverlay.addEventListener("click", closeOrderPanel);
+
+
+/* =================================
+   ESCAPE KEY
+================================= */
+
+document.addEventListener("keydown", (event) => {
+
+    if (event.key === "Escape") {
+        closeOrderPanel();
     }
 
 });
