@@ -1188,3 +1188,79 @@ footer > p {
         font-size: 1.25rem;
     }
 }
+/* =================================
+   REAL PROJECT IMAGES
+================================= */
+
+/* Hero image */
+
+.hero-image {
+    overflow: hidden;
+}
+
+.hero-image img {
+    width: 100%;
+    height: 100%;
+    display: block;
+
+    object-fit: cover;
+    object-position: center;
+}
+
+
+/* Story image */
+
+.story-image {
+    overflow: hidden;
+}
+
+.story-image img {
+    width: 100%;
+    height: 100%;
+    display: block;
+
+    object-fit: cover;
+    object-position: center;
+}
+
+
+/* Space gallery */
+
+.gallery-image {
+    overflow: hidden;
+    position: relative;
+}
+
+.gallery-image img {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+    object-position: center;
+
+    transition: transform 0.5s ease;
+}
+
+.gallery-image:hover img {
+    transform: scale(1.03);
+}
+
+/* Keep the gallery number visible */
+
+.gallery-image span {
+    position: relative;
+    z-index: 3;
+}
+
+/* Keep the subtle frame over the image */
+
+.gallery-image::before {
+    z-index: 2;
+    pointer-events: none;
+}
